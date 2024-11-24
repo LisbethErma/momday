@@ -21,85 +21,179 @@
             position: relative;
             overflow: hidden;
         }
+        .screen {
+            display: none;
+            width: 100%;
+        }
+        .active {
+            display: flex;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #d32f2f;
+        }
+        .input-container {
+            margin: 20px;
+        }
+        textarea {
+            font-size: 1.2em;
+            padding: 10px;
+            border: 2px solid #d32f2f;
+            border-radius: 5px;
+            width: 80%;
+        }
+        button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        .card {
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+        }
         .flowers {
+            margin: 50px 0;
             display: flex;
             justify-content: space-between;
             width: 95%;
             align-items: center;
         }
-        .box {
-            width: 620px;
-            height: 620px;
-            background-color: yellow;
-            border: 5px solid red;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 50px;
-            cursor: pointer;
-            overflow: hidden;
-            transition: transform 1s ease, opacity 1s ease;
-        }
-        .box img {
-            width: 600px;
+        .flowers img {
+            width: 600px; /* Размер картинки увеличен */
             height: auto;
-            opacity: 0;
-            transition: opacity 0.5s ease;
         }
-        .box .ribbon {
+        .flowers img:first-child {
+            margin-left: 50px; /* Отступ для первой картинки */
+        }
+        .flowers img:last-child {
+            margin-right: 50px; /* Отступ для последней картинки */
+        }
+        .flowers img:nth-child(2) {
+            margin-left: 50px; /* Отступ между второй и первой картинкой */
+            margin-right: 50px; /* Отступ между второй и третьей картинкой */
+        }
+        .hearts-bg {
+            background: #fbe9e7;
+            position: relative;
+            overflow: hidden;
+        }
+        .heart {
             position: absolute;
-            width: 100%;
-            height: 10px;
-            background-color: red;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            background-image: url("img/h.png");
+            background-size: cover;
         }
-        .box .ribbon::before,
-        .box .ribbon::after {
-            content: '';
+        .text {
+            font-size: 7.5em; /* Увеличен в три раза */
+            color: #d32f2f;
+            animation: rainbow 3s infinite linear;
+            text-shadow: 0 0 10px #ff5722, 0 0 20px #ff9800, 0 0 30px #ff5722;
+        }
+        @keyframes rainbow {
+            0% { color: red; }
+            20% { color: orange; }
+            40% { color: yellow; }
+            60% { color: green; }
+            80% { color: blue; }
+            100% { color: violet; }
+        }
+        /* Эффект блёсток */
+        .sparkle {
             position: absolute;
-            width: 10px;
-            height: 100%;
-            background-color: red;
-            left: 50%;
-            top: 0;
-            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: gold;
+            border-radius: 50%;
+            animation: sparkle 2s infinite ease-in-out;
         }
-        .box.fallen {
-            transform: translateY(150%);
-            opacity: 0;
+        .sparkle:nth-child(odd) {
+            background-color: pink;
         }
-        .box.fallen img {
-            opacity: 1;
+        .sparkle:nth-child(even) {
+            background-color: lightblue;
+        }
+        @keyframes sparkle {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
         }
     </style>
     <script>
-        function openBox(box) {
-            box.classList.add("fallen");
-            const img = box.querySelector("img");
-            setTimeout(() => {
-                img.style.opacity = "1"; // Сделать картинку видимой после падения коробки
-            }, 1000); // Через 1 секунду (после завершения анимации падения)
+        function generateHearts() {
+            const heartsBg = document.querySelector(".hearts-bg");
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement("div");
+                heart.className = "heart";
+                heart.style.left = Math.random() * 100 + "%";
+                heart.style.top = Math.random() * 100 + "%";
+                heartsBg.appendChild(heart);
+            }
         }
+
+        function generateSparkles() {
+            const container = document.querySelector(".container.card-screen");
+            for (let i = 0; i < 150; i++) {
+                const sparkle = document.createElement("div");
+                sparkle.className = "sparkle";
+                sparkle.style.left = Math.random() * 100 + "%";
+                sparkle.style.top = Math.random() * 100 + "%";
+                sparkle.style.animationDelay = Math.random() * 2 + "s";
+                container.appendChild(sparkle);
+            }
+        }
+
+        function showCard() {
+            const message = document.getElementById("messageInput").value;
+            if (message.trim() !== "") {
+                document.getElementById("cardMessage").textContent = message;
+                document.querySelector(".input-screen").classList.remove("active");
+                document.querySelector(".card-screen").classList.add("active");
+                generateSparkles();
+            } else {
+                alert("Пожалуйста, введите поздравление.");
+            }
+        }
+
+        window.onload = generateHearts;
     </script>
 </head>
 <body>
-    <div class="container">
-        <div class="flowers">
-            <div class="box" onclick="openBox(this)">
-                <div class="ribbon"></div>
+    <div class="container input-screen screen active">
+        <h1>С Днём Матери!</h1>
+        <div class="input-container">
+            <label for="messageInput">Введите поздравление:</label><br>
+            <textarea id="messageInput" rows="4" placeholder="Напишите ваше поздравление"></textarea>
+            <br>
+            <button onclick="showCard()">Получить открытку</button>
+        </div>
+    </div>
+    <div class="container card-screen screen hearts-bg">
+        <div class="card">
+            <div class="flowers">
                 <img src="img/i1.jpeg" alt="Цветок 1">
-            </div>
-            <div class="box" onclick="openBox(this)">
-                <div class="ribbon"></div>
                 <img src="img/i2.jpg" alt="Цветок 2">
-            </div>
-            <div class="box" onclick="openBox(this)">
-                <div class="ribbon"></div>
                 <img src="img/i3.jpg" alt="Цветок 3">
             </div>
+            <h2 class="text" id="cardMessage"></h2>
         </div>
     </div>
 </body>
